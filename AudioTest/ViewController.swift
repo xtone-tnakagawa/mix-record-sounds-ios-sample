@@ -2,9 +2,6 @@
 //  ViewController.swift
 //  AudioTest
 //
-//  Created by 中川貴代 on 2019/01/07.
-//  Copyright © 2019 中川貴代. All rights reserved.
-//
 
 import UIKit
 
@@ -15,7 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     @IBOutlet weak var label: UILabel!
     
-    var recordAudio:RecordAudio! = RecordAudio()
+    var audioService:AudioService! = AudioService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +24,7 @@ class ViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         //stop to record
-        //self.recordAudio.stopUpdatingVolume()
+        //self.audioService.stopRecord()
         super.viewDidDisappear(animated)
     }
     
@@ -40,7 +37,7 @@ class ViewController: UIViewController {
         record.isHidden = true
         label.text = "Recording ... "
         //start to recode
-        //self.recordAudio.startUpdatingVolume()
+        //self.audioService.startRecord()
         rec_end.isHidden = false
     }
 
@@ -48,19 +45,22 @@ class ViewController: UIViewController {
         rec_end.isHidden = true
         label.text = "Stopping ... "
         //stop to record
-        //self.recordAudio.stopUpdatingVolume()
+        //self.audioService.stopRecord()
         label.text = "Converting Now. Please Wait. "
         indicator.isHidden = false
         //convert voice to music
+        //self.audioService.pargeSounds()
         indicator.isHidden = true
         stop.isHidden = false
         //start to play a music
+        //self.audioService.startPlay()
         label.text = "Playing ... "
     }
     
     @IBAction func onTapStopButton(_ sender: Any) {
         stop.isHidden = true
         //stop a music
+        //self.audioService.endPlay()
         label.text = "Tap to Record your Voice"
         record.isHidden = false
     }

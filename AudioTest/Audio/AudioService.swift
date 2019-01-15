@@ -15,33 +15,24 @@ private func AudioQueueInputCallback(
     inNumberPacketDescriptions: UInt32,
     inPacketDescs: UnsafePointer<AudioStreamPacketDescription>?)
 {
-    // Do nothing, because not recoding.
-
+    
 }
 
-class RecordAudio : NSObject {
-    func startUpdatingVolume() {}
-    func stopUpdatingVolume() {}
-}
-
-class RecordAudioWithToolBox : NSObject {
+class AudioService : NSObject {
     var queue: AudioQueueRef!
     //var timer: Timer!
+    var audioObj: AudioObject
     
-    // MARK: - Internal methods
-    func startUpdatingVolume() {
+    override init() {
+        audioObj = AudioObject(_: nil)
+    }
+    
+    func startRecord() {
+        if audioObj.seconds > 0 {
+            audioObj.reset()
+        }
         // Set data format
-        var dataFormat = AudioStreamBasicDescription(
-            mSampleRate: 44100.0,
-            mFormatID: kAudioFormatLinearPCM,
-            mFormatFlags: AudioFormatFlags(kLinearPCMFormatFlagIsBigEndian | kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked),
-            mBytesPerPacket: 2,
-            mFramesPerPacket: 1,
-            mBytesPerFrame: 2,
-            mChannelsPerFrame: 1,
-            mBitsPerChannel: 16,
-            mReserved: 0)
-        
+        var dataFormat = audioObj.audioFormat
         // Observe input level
         var audioQueue: AudioQueueRef? = nil
         var error = noErr
@@ -70,7 +61,7 @@ class RecordAudioWithToolBox : NSObject {
 //        self.timer?.fire()
     }
     
-    func stopUpdatingVolume()
+    func stopRecord()
     {
         // Finish observation
 //        self.timer.invalidate()
@@ -78,6 +69,31 @@ class RecordAudioWithToolBox : NSObject {
         AudioQueueFlush(self.queue)
         AudioQueueStop(self.queue, false)
         AudioQueueDispose(self.queue, true)
+    }
+    
+    func startPlay()
+    {
+        
+    }
+    
+    func endPlay()
+    {
+        
+    }
+    
+    func pargeSounds()
+    {
+        
+    }
+    
+    func getSoundsFromFile(filePath: NSURL)
+    {
+        
+    }
+    
+    func analyzeSounds()
+    {
+        
     }
     
     @objc func detectVolume(_ timer: Timer)

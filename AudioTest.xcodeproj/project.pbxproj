@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C048ED0821EDBF27009558FA /* AudioObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C048ED0721EDBF27009558FA /* AudioObject.swift */; };
 		C0B937AF21E30AD500601DDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937AE21E30AD500601DDD /* AppDelegate.swift */; };
 		C0B937B121E30AD500601DDD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937B021E30AD500601DDD /* ViewController.swift */; };
 		C0B937B621E30AD600601DDD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0B937B521E30AD600601DDD /* Assets.xcassets */; };
 		C0B937B921E30AD600601DDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0B937B721E30AD600601DDD /* Main.storyboard */; };
 		C0B937C421E30AD600601DDD /* AudioTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937C321E30AD600601DDD /* AudioTestTests.swift */; };
 		C0B937CF21E30AD600601DDD /* AudioTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937CE21E30AD600601DDD /* AudioTestUITests.swift */; };
-		C0B937DE21E30B2900601DDD /* RecordAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937DD21E30B2900601DDD /* RecordAudio.swift */; };
+		C0B937DE21E30B2900601DDD /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937DD21E30B2900601DDD /* AudioService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C048ED0721EDBF27009558FA /* AudioObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioObject.swift; sourceTree = "<group>"; };
 		C0B937AB21E30AD500601DDD /* AudioTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B937AE21E30AD500601DDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0B937B021E30AD500601DDD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -46,7 +48,7 @@
 		C0B937CA21E30AD600601DDD /* AudioTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B937CE21E30AD600601DDD /* AudioTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTestUITests.swift; sourceTree = "<group>"; };
 		C0B937D021E30AD600601DDD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0B937DD21E30B2900601DDD /* RecordAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAudio.swift; sourceTree = "<group>"; };
+		C0B937DD21E30B2900601DDD /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,7 +130,8 @@
 		C0B937DC21E30AF400601DDD /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				C0B937DD21E30B2900601DDD /* RecordAudio.swift */,
+				C0B937DD21E30B2900601DDD /* AudioService.swift */,
+				C048ED0721EDBF27009558FA /* AudioObject.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -263,9 +266,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C048ED0821EDBF27009558FA /* AudioObject.swift in Sources */,
 				C0B937B121E30AD500601DDD /* ViewController.swift in Sources */,
 				C0B937AF21E30AD500601DDD /* AppDelegate.swift in Sources */,
-				C0B937DE21E30B2900601DDD /* RecordAudio.swift in Sources */,
+				C0B937DE21E30B2900601DDD /* AudioService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
