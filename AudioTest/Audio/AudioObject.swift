@@ -32,10 +32,12 @@ class AudioObject : NSObject {
             mBytesPerFrame: 2,  // １フレームのバイト数
             mChannelsPerFrame: 1,  // １フレームのチャンネル数
             mBitsPerChannel: 16,  // １チャンネルのビット数
-            mReserved: 0)
+            mReserved: 0
+        )
     }
     // 書き出し/読み出し用のデータ
-    var data: NSData?
+    var data: Data?
+    var rhythmData: Data?
     
     init(_ obj: Any?) {
         startingPacketCount = 0
@@ -47,6 +49,8 @@ class AudioObject : NSObject {
     }
     
     func reset() {
+        data = nil
+        rhythmData = nil
         buffer.deallocate()
         startingPacketCount = 0
         maxPacketCount = (48000 * 10)
