@@ -37,7 +37,7 @@ class ViewController: UIViewController {
         record.isHidden = true
         label.text = "Recording ... "
         //start to recode
-        //self.audioService.startRecord()
+        self.audioService.startRecord()
         rec_end.isHidden = false
     }
 
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         rec_end.isHidden = true
         label.text = "Stopping ... "
         //stop to record
-        //self.audioService.stopRecord()
+        self.audioService.stopRecord()
         label.text = "Converting Now. Please Wait. "
         indicator.isHidden = false
         //convert voice to music
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         indicator.isHidden = true
         stop.isHidden = false
         //start to play a music
-        //self.audioService.startPlay()
+        self.audioService.startPlay()
         label.text = "Playing ... "
     }
     
