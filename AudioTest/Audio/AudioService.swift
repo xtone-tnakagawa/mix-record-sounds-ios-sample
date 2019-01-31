@@ -1,5 +1,5 @@
 //
-//  Record.swift
+//  AudiopService.swift
 //  AudioTest
 //
 //  Created on 2019/01/07.
@@ -20,27 +20,29 @@ private func AudioQueueInputCallback(
     AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, nil);
 }
 
-class AudioService : NSObject {
+class AudioService : NSObject
+{
     var queue: AudioQueueRef!
     //var timer: Timer!
     var audioObj: AudioObject
     var audioEngine: AVAudioEngine
     
-    override init() {
+    override init()
+    {
         audioObj = AudioObject(_: nil)
         audioEngine = AVAudioEngine()
     }
     
     func startRecord() {
-        if audioObj.seconds > 0 {
+        if audioObj.seconds > 0
+        {
             audioObj.reset()
         }
         // Set data format
         var dataFormat = audioObj.audioFormat
         // Observe input level
         var audioQueue: AudioQueueRef? = nil
-        var error = noErr
-        error = AudioQueueNewInput(
+        let error = AudioQueueNewInput(
             &dataFormat,
             AudioQueueInputCallback,
             UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()),
@@ -48,7 +50,8 @@ class AudioService : NSObject {
             .none,
             0,
             &audioQueue)
-        if error == noErr {
+        if error == noErr
+        {
             self.queue = audioQueue
         }
         AudioQueueStart(self.queue, nil)
@@ -70,31 +73,49 @@ class AudioService : NSObject {
         // Finish observation
 //        self.timer.invalidate()
 //        self.timer = nil
-        audioObj.data = Data(bytes: audioObj.buffer, count: Int(audioObj.maxPacketCount))
+        if let buf = audioObj.buffer
+        {
+            audioObj.data = Data(bytes: buf, count: Int(audioObj.maxPacketCount))
+        }
         AudioQueueFlush(self.queue)
         AudioQueueStop(self.queue, false)
         AudioQueueDispose(self.queue, true)
+    }
+    
+    //NOTE: This method no execution becouse this child method is empty.
+    func pargeSounds() {
+        analyzeSounds()
     }
     
     func startPlay()
     {
         let inputVoice = AVAudioPlayerNode()
         let inputRhythm = AVAudioPlayerNode()
+        let inputRhythmSpeedUnit = AVAudioUnitVarispeed()
         let mixer = audioEngine.mainMixerNode
         let format = inputVoice.inputFormat(forBus: 0)
         
         audioEngine.attach(inputVoice)
         audioEngine.attach(inputRhythm)
+        audioEngine.attach(inputRhythmSpeedUnit)
         audioEngine.attach(mixer)
         
-        //TODO: read sound signals from Buffer
+        // read sound signals from Buffer
         let voiceBuffer = toPCMBuffer(data: audioObj.data!)
         inputVoice.scheduleBuffer(voiceBuffer, completionHandler: nil)
-        let rhythmBuffer = toPCMBuffer(data: audioObj.rhythmData!)
+        
+        let resourcePath = Bundle.main.path(forResource: "rhythm", ofType: "wav")
+        if let path = resourcePath {
+            getSoundsFromFile(URL(fileURLWithPath: path))
+        }
+        let rhythmBuffer = audioObj.rhythmDataBuffer!
         inputRhythm.scheduleBuffer(rhythmBuffer, completionHandler: nil)
+        // set speed rate
+        inputRhythmSpeedUnit.rate = getPargeSpeed(buffer: voiceBuffer)
         
         audioEngine.connect(inputVoice, to: mixer, format: format)
-        audioEngine.connect(inputRhythm, to: mixer, format: format)
+        audioEngine.connect(inputRhythm, to: inputRhythmSpeedUnit, format: format)
+        audioEngine.connect(inputRhythmSpeedUnit, to: mixer, format: format)
         audioEngine.connect(mixer, to: audioEngine.outputNode, format: nil)
         
         try! audioEngine.start()
@@ -106,41 +127,55 @@ class AudioService : NSObject {
     {
         audioEngine.stop()
     }
-    
-    func pargeSounds()
+
+    func writePackets(inBuffer: AudioQueueBufferRef)
     {
-        //TODO: set BPM to sound signals (Rhythm based)
-    }
-    
-    func getSoundsFromFile(filePath: NSURL)
-    {
-        // TODO: read sound signals from a sound file
-    }
-    
-    func analyzeSounds()
-    {
-        // TODO: FFT with Buffer Data (Recorded)
-    }
-    
-    func writePackets(inBuffer: AudioQueueBufferRef) {
         
         let numPackets: UInt32 = (inBuffer.pointee.mAudioDataByteSize / audioObj.bytesPerPacket)
-        audioObj.maxPacketCount = numPackets
+        audioObj.maxPacketCount += numPackets
         
-        if 0 < numPackets {
-            memcpy(audioObj.buffer.advanced(by: Int(audioObj.bytesPerPacket * audioObj.startingPacketCount)),
+        if 0 < numPackets
+        {
+            memcpy(audioObj.buffer!.advanced(by: Int(audioObj.bytesPerPacket * audioObj.startingPacketCount)),
                    inBuffer.pointee.mAudioData,
                    Int(audioObj.bytesPerPacket * numPackets))
             audioObj.startingPacketCount += numPackets;
         }
     }
+
+    //NOTE: 複数のリズム・伴奏音声ファイルからBPMを取得する場合は、引数追加
+    private func getPargeSpeed(buffer: AVAudioPCMBuffer) -> Float
+    {
+        let bpm = SoundAnalyze().getTempo(data: audioObj, pcmBuffer: buffer)
+        if bpm < 0
+        {
+          return 1.0
+        }
+        return Float(bpm) / 100.0
+    }
     
-    func toPCMBuffer(data: Data) -> AVAudioPCMBuffer {
+    private func getSoundsFromFile(_ filePath: URL)
+    {
+        // read sound signals from a sound file
+        let audioFile = try! AVAudioFile(forReading: filePath)
+        try! audioFile.read(into: audioObj.rhythmDataBuffer!)
+    }
+    
+    private func analyzeSounds()
+    {
+        // TODO: FFT with Buffer Data if needed
+        
+    }
+    
+    private func toPCMBuffer(data: Data) -> AVAudioPCMBuffer
+    {
         let audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: audioObj.audioFormat.mSampleRate, channels: 1, interleaved: false)
         let audioBuffer = AVAudioPCMBuffer(pcmFormat: audioFormat!, frameCapacity: UInt32(data.count)/2)
-        if let buffer = audioBuffer {
+        if let buffer = audioBuffer
+        {
             buffer.frameLength = buffer.frameCapacity
-            for i in 0..<data.count/2 {
+            for i in 0..<data.count/2
+            {
                 // transform two bytes into a float (-1.0 - 1.0), required by the audio buffer
                 buffer.floatChannelData?.pointee[i] = Float(Int16(data[i*2+1]) << 8 | Int16(data[i*2]))/Float(INT16_MAX)
             }

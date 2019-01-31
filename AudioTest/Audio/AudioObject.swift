@@ -3,10 +3,11 @@
 //  AudioTest
 //
 import AudioToolbox
+import AVFoundation
 
 class AudioObject : NSObject {
     // バッファ
-    var buffer: UnsafeMutableRawPointer
+    var buffer: UnsafeMutableRawPointer?
     // オーディオキューオブジェクト
     var audioQueueObject: AudioQueueRef?
     // 再生時のパケット数
@@ -37,23 +38,23 @@ class AudioObject : NSObject {
     }
     // 書き出し/読み出し用のデータ
     var data: Data?
-    var rhythmData: Data?
+    var rhythmDataBuffer: AVAudioPCMBuffer?
     
     init(_ obj: Any?) {
         startingPacketCount = 0
-        maxPacketCount = (48000 * 10)
+        maxPacketCount = 0
         buffer = UnsafeMutableRawPointer(malloc(Int(maxPacketCount * bytesPerPacket)))
     }
     deinit {
-        buffer.deallocate()
+        buffer!.deallocate()
     }
     
     func reset() {
         data = nil
-        rhythmData = nil
-        buffer.deallocate()
+        rhythmDataBuffer = nil
+        buffer!.deallocate()
         startingPacketCount = 0
-        maxPacketCount = (48000 * 10)
+        maxPacketCount = 0
         buffer = UnsafeMutableRawPointer(malloc(Int(maxPacketCount * bytesPerPacket)))
     }
 }
