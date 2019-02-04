@@ -7,7 +7,7 @@
 import AudioToolbox
 import AVFoundation
 
-private func AudioQueueInputCallback(
+func AudioQueueInputCallback (
     _ inUserData: UnsafeMutableRawPointer?,
     inAQ: AudioQueueRef,
     inBuffer: AudioQueueBufferRef,
@@ -58,12 +58,13 @@ class AudioService : NSObject
     
     func stopRecord()
     {
+        AudioQueueFlush(self.queue)
+
         if let buf = audioObj.buffer
         {
-            audioObj.data = Data(bytes: buf, count: Int(audioObj.maxPacketCount))
+            audioObj.data = Data(bytes: buf, count: Int(audioObj.maxPacketCount * audioObj.audioFormat.mBytesPerPacket))
         }
-        AudioQueueFlush(self.queue)
-        AudioQueueStop(self.queue, false)
+        AudioQueueStop(self.queue, true)
         AudioQueueDispose(self.queue, true)
     }
     
@@ -126,6 +127,7 @@ class AudioService : NSObject
                    inBuffer.pointee.mAudioData,
                    Int(audioObj.bytesPerPacket * numPackets))
             audioObj.startingPacketCount += numPackets;
+            audioObj.maxPacketCount += numPackets
         }
     }
 

@@ -21,7 +21,7 @@ class AudioObject : NSObject {
     // パケットのバイト数
     let bytesPerPacket: UInt32 = 2
     // 録音時間（＝再生時間）
-    var seconds: UInt32 = 0
+    var seconds: UInt32
     // オーディオストリームのフォーマット
     var audioFormat: AudioStreamBasicDescription {
         return AudioStreamBasicDescription(
@@ -43,6 +43,7 @@ class AudioObject : NSObject {
     init(_ obj: Any?) {
         startingPacketCount = 0
         maxPacketCount = 0
+        seconds = 0
         buffer = UnsafeMutableRawPointer(malloc(Int(maxPacketCount * bytesPerPacket)))
     }
     deinit {
@@ -55,6 +56,7 @@ class AudioObject : NSObject {
         buffer!.deallocate()
         startingPacketCount = 0
         maxPacketCount = 0
+        seconds = 0
         buffer = UnsafeMutableRawPointer(malloc(Int(maxPacketCount * bytesPerPacket)))
     }
 }
