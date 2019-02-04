@@ -67,11 +67,13 @@ class SoundAnalyze : NSObject {
         
         diffs.removeAll()
         
-        //音量の増分をとる
-        for i in 0 ..< n - 1 {
-            let value = vols[i] - vols[i + 1]
-            let diff = value > 0 ? value : 0
-            diffs.append(diff)
+        if (n > 0) {
+            //音量の増分をとる
+            for i in 0 ..< n - 1 {
+                let value = vols[i] - vols[i + 1]
+                let diff = value > 0 ? value : 0
+                diffs.append(diff)
+            }
         }
         diffs.append(0)
         

@@ -77,17 +77,13 @@ class AudioService : NSObject
     {
         let inputVoice = AVAudioPlayerNode()
         let inputRhythm = AVAudioPlayerNode()
-        let inputRhythmSpeedUnit = AVAudioUnitVarispeed()
         let mixer = audioEngine.mainMixerNode
-        let format = AVAudioFormat.init(standardFormatWithSampleRate: audioObj.audioFormat.mSampleRate, channels: 1)
         
         audioEngine.attach(inputVoice)
         audioEngine.attach(inputRhythm)
-        audioEngine.attach(inputRhythmSpeedUnit)
         
-        audioEngine.connect(inputVoice, to: mixer, format: format)
-        audioEngine.connect(inputRhythm, to: inputRhythmSpeedUnit, format: format)
-        audioEngine.connect(inputRhythmSpeedUnit, to: mixer, format: nil)
+        audioEngine.connect(inputVoice, to: mixer, format: AVAudioFormat.init(standardFormatWithSampleRate: audioObj.audioFormat.mSampleRate, channels: 1))
+        audioEngine.connect(inputRhythm, to: mixer, format: AVAudioFormat.init(standardFormatWithSampleRate: audioObj.audioFormat.mSampleRate, channels: 3))
         audioEngine.connect(mixer, to: audioEngine.outputNode, format: nil)
 
         // read sound signals from Buffer
@@ -151,6 +147,7 @@ class AudioService : NSObject
           return
         }
         do {
+            audioObj.rhythmDataBuffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat, frameCapacity: AVAudioFrameCount(audioFile.length))
             try audioFile.read(into: audioObj.rhythmDataBuffer!)
         } catch {
             return
