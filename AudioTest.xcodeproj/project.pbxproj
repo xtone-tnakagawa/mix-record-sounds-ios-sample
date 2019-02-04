@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		C048ED0821EDBF27009558FA /* AudioObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C048ED0721EDBF27009558FA /* AudioObject.swift */; };
+		C04D8A832203FF0300D74699 /* rhythm.wav in Resources */ = {isa = PBXBuildFile; fileRef = C04D8A822203FF0300D74699 /* rhythm.wav */; };
+		C04D8A842204445D00D74699 /* rhythm.wav in Resources */ = {isa = PBXBuildFile; fileRef = C04D8A822203FF0300D74699 /* rhythm.wav */; };
+		C04D8A852204445E00D74699 /* rhythm.wav in Resources */ = {isa = PBXBuildFile; fileRef = C04D8A822203FF0300D74699 /* rhythm.wav */; };
 		C0589F8521F9C5A800786915 /* SoundAnalyze.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0589F8421F9C5A800786915 /* SoundAnalyze.swift */; };
 		C0B937AF21E30AD500601DDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937AE21E30AD500601DDD /* AppDelegate.swift */; };
 		C0B937B121E30AD500601DDD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B937B021E30AD500601DDD /* ViewController.swift */; };
@@ -37,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		C048ED0721EDBF27009558FA /* AudioObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioObject.swift; sourceTree = "<group>"; };
+		C04D8A822203FF0300D74699 /* rhythm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rhythm.wav; sourceTree = "<group>"; };
 		C0589F8421F9C5A800786915 /* SoundAnalyze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAnalyze.swift; sourceTree = "<group>"; };
 		C0B937AB21E30AD500601DDD /* AudioTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B937AE21E30AD500601DDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +82,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C04D8A812203FD9300D74699 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C04D8A822203FF0300D74699 /* rhythm.wav */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		C0B937A221E30AD500601DDD = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +113,7 @@
 		C0B937AD21E30AD500601DDD /* AudioTest */ = {
 			isa = PBXGroup;
 			children = (
+				C04D8A812203FD9300D74699 /* Resources */,
 				C0B937DC21E30AF400601DDD /* Audio */,
 				C0B937AE21E30AD500601DDD /* AppDelegate.swift */,
 				C0B937B021E30AD500601DDD /* ViewController.swift */,
@@ -244,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0B937B921E30AD600601DDD /* Main.storyboard in Resources */,
+				C04D8A832203FF0300D74699 /* rhythm.wav in Resources */,
 				C0B937B621E30AD600601DDD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,6 +266,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04D8A842204445D00D74699 /* rhythm.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +274,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04D8A852204445E00D74699 /* rhythm.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
