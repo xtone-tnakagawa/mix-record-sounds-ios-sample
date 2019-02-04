@@ -23,7 +23,6 @@ private func AudioQueueInputCallback(
 class AudioService : NSObject
 {
     var queue: AudioQueueRef!
-    //var timer: Timer!
     var audioObj: AudioObject
     var audioEngine: AVAudioEngine
     
@@ -55,24 +54,10 @@ class AudioService : NSObject
             self.queue = audioQueue
         }
         AudioQueueStart(self.queue, nil)
-        
-        // Enable level meter
-//        var enabledLevelMeter: UInt32 = 1
-//        AudioQueueSetProperty(self.queue, kAudioQueueProperty_EnableLevelMetering, &enabledLevelMeter, UInt32(MemoryLayout<UInt32>.size))
-//
-//        self.timer = Timer.scheduledTimer(timeInterval: 0.5,
-//                                          target: self,
-//                                          selector: #selector(self.detectVolume(_:)),
-//                                          userInfo: nil,
-//                                          repeats: true)
-//        self.timer?.fire()
     }
     
     func stopRecord()
     {
-        // Finish observation
-//        self.timer.invalidate()
-//        self.timer = nil
         if let buf = audioObj.buffer
         {
             audioObj.data = Data(bytes: buf, count: Int(audioObj.maxPacketCount))
@@ -83,7 +68,8 @@ class AudioService : NSObject
     }
     
     //NOTE: This method no execution becouse this child method is empty.
-    func pargeSounds() {
+    func pargeSounds()
+    {
         analyzeSounds()
     }
     
@@ -93,30 +79,34 @@ class AudioService : NSObject
         let inputRhythm = AVAudioPlayerNode()
         let inputRhythmSpeedUnit = AVAudioUnitVarispeed()
         let mixer = audioEngine.mainMixerNode
-        let format = inputVoice.inputFormat(forBus: 0)
+        let format = AVAudioFormat.init(standardFormatWithSampleRate: audioObj.audioFormat.mSampleRate, channels: 1)
         
         audioEngine.attach(inputVoice)
         audioEngine.attach(inputRhythm)
         audioEngine.attach(inputRhythmSpeedUnit)
-        audioEngine.attach(mixer)
-        
-        // read sound signals from Buffer
-        let voiceBuffer = toPCMBuffer(data: audioObj.data!)
-        inputVoice.scheduleBuffer(voiceBuffer, completionHandler: nil)
-        
-        let resourcePath = Bundle.main.path(forResource: "rhythm", ofType: "wav")
-        if let path = resourcePath {
-            getSoundsFromFile(URL(fileURLWithPath: path))
-        }
-        let rhythmBuffer = audioObj.rhythmDataBuffer!
-        inputRhythm.scheduleBuffer(rhythmBuffer, completionHandler: nil)
-        // set speed rate
-        inputRhythmSpeedUnit.rate = getPargeSpeed(buffer: voiceBuffer)
         
         audioEngine.connect(inputVoice, to: mixer, format: format)
         audioEngine.connect(inputRhythm, to: inputRhythmSpeedUnit, format: format)
-        audioEngine.connect(inputRhythmSpeedUnit, to: mixer, format: format)
+        audioEngine.connect(inputRhythmSpeedUnit, to: mixer, format: nil)
         audioEngine.connect(mixer, to: audioEngine.outputNode, format: nil)
+
+        // read sound signals from Buffer
+        let voiceBuffer = toPCMBuffer(data: audioObj.data!)
+        inputVoice.scheduleBuffer(voiceBuffer, completionCallbackType: .dataPlayedBack, completionHandler: { (AVAudioPlayerNodeCompletionCallbackType) -> Void in
+            self.endPlay()
+        })
+        
+        if let resourcePath = Bundle.main.path(forResource: "rhythm", ofType: "wav") {
+            let url = URL(fileURLWithPath: resourcePath)
+            getSoundsFromFile(url)
+        }
+        if let buffer = audioObj.rhythmDataBuffer {
+            inputRhythm.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
+            // set speed rate
+            inputRhythm.rate = getPargeSpeed(buffer: voiceBuffer)
+        }
+
+        //NOTE: if you want to save sounds at file, use `mixer.installTap(OnBus:)` with new AudioFile
         
         try! audioEngine.start()
         inputRhythm.play()
@@ -151,14 +141,20 @@ class AudioService : NSObject
         {
           return 1.0
         }
-        return Float(bpm) / 100.0
+        return Float(bpm) / 100.0 // bpm of sample rhythm sound is 100.
     }
     
     private func getSoundsFromFile(_ filePath: URL)
     {
         // read sound signals from a sound file
-        let audioFile = try! AVAudioFile(forReading: filePath)
-        try! audioFile.read(into: audioObj.rhythmDataBuffer!)
+        guard let audioFile = try? AVAudioFile(forReading: filePath) else {
+          return
+        }
+        do {
+            try audioFile.read(into: audioObj.rhythmDataBuffer!)
+        } catch {
+            return
+        }
     }
     
     private func analyzeSounds()
@@ -169,7 +165,7 @@ class AudioService : NSObject
     
     private func toPCMBuffer(data: Data) -> AVAudioPCMBuffer
     {
-        let audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: audioObj.audioFormat.mSampleRate, channels: 1, interleaved: false)
+        let audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: audioObj.audioFormat.mSampleRate, channels: 1, interleaved: true)
         let audioBuffer = AVAudioPCMBuffer(pcmFormat: audioFormat!, frameCapacity: UInt32(data.count)/2)
         if let buffer = audioBuffer
         {
@@ -184,6 +180,7 @@ class AudioService : NSObject
         return AVAudioPCMBuffer()
     }
     
+    //NOTE: if you want to display volume level, use this function and add UI parts.
     @objc func detectVolume(_ timer: Timer)
     {
         // Get level
@@ -195,12 +192,5 @@ class AudioService : NSObject
             kAudioQueueProperty_CurrentLevelMeterDB,
             &levelMeter,
             &propertySize)
-        
-        // Show the audio channel's peak and average RMS power.
-//        self.peakTextField.text = "".appendingFormat("%.2f", levelMeter.mPeakPower)
-//        self.averageTextField.text = "".appendingFormat("%.2f", levelMeter.mAveragePower)
-        
-        // Show "LOUD!!" if mPeakPower is larger than -1.0
-//        self.loudLabel.isHidden = (levelMeter.mPeakPower >= -1.0) ? false : true
     }
 }

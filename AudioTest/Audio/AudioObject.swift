@@ -44,6 +44,7 @@ class AudioObject : NSObject {
         startingPacketCount = 0
         maxPacketCount = 0
         buffer = UnsafeMutableRawPointer(malloc(Int(maxPacketCount * bytesPerPacket)))
+        rhythmDataBuffer = AVAudioPCMBuffer()
     }
     deinit {
         buffer!.deallocate()
@@ -51,7 +52,7 @@ class AudioObject : NSObject {
     
     func reset() {
         data = nil
-        rhythmDataBuffer = nil
+        rhythmDataBuffer = AVAudioPCMBuffer()
         buffer!.deallocate()
         startingPacketCount = 0
         maxPacketCount = 0

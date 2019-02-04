@@ -51,16 +51,20 @@ class ViewController: UIViewController {
         //convert voice to music
         //self.audioService.pargeSounds()
         indicator.isHidden = true
+        label.text = "Playing ... "
         stop.isHidden = false
         //start to play a music
         self.audioService.startPlay()
-        label.text = "Playing ... "
+        stop.isHidden = true
+        //stop a music
+        label.text = "Tap to Record your Voice"
+        record.isHidden = false
     }
     
     @IBAction func onTapStopButton(_ sender: Any) {
         stop.isHidden = true
         //stop a music
-        //self.audioService.endPlay()
+        self.audioService.endPlay()
         label.text = "Tap to Record your Voice"
         record.isHidden = false
     }
