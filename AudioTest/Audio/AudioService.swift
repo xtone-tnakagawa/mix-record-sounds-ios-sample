@@ -52,6 +52,13 @@ class AudioService : NSObject
         if error == noErr
         {
             self.queue = audioQueue
+            var buffers = Array<AudioQueueBufferRef?>(repeating: nil, count: 3)
+            let bufferByteSize: UInt32 = audioObj.numPacketsToWrite * audioObj.audioFormat.mBytesPerPacket
+            
+            for bufferIndex in 0 ..< buffers.count {
+                AudioQueueAllocateBuffer(audioQueue!, bufferByteSize, &buffers[bufferIndex])
+                AudioQueueEnqueueBuffer(audioQueue!, buffers[bufferIndex]!, 0, nil)
+            }
         }
         AudioQueueStart(self.queue, nil)
     }
