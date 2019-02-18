@@ -465,6 +465,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.xtone.AudioTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -483,6 +484,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.xtone.AudioTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
