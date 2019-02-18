@@ -44,7 +44,7 @@ class AudioObject : NSObject {
         startingPacketCount = 0
         maxPacketCount = 0
         seconds = 0
-        buffer = UnsafeMutableRawPointer(malloc(Int(1000 * bytesPerPacket)))
+        buffer = UnsafeMutableRawPointer(malloc(Int(1000000 * bytesPerPacket)))
     }
     deinit {
         buffer!.deallocate()
@@ -57,6 +57,6 @@ class AudioObject : NSObject {
         startingPacketCount = 0
         maxPacketCount = 0
         seconds = 0
-        buffer = UnsafeMutableRawPointer(malloc(Int(1000 * bytesPerPacket)))
+        buffer = UnsafeMutableRawPointer(malloc(Int(1000000 * bytesPerPacket)))
     }
 }
