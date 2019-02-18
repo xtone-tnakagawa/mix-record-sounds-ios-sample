@@ -55,10 +55,10 @@ class ViewController: UIViewController {
         stop.isHidden = false
         //start to play a music
         self.audioService.startPlay()
-        stop.isHidden = true
-        //stop a music
-        label.text = "Tap to Record your Voice"
-        record.isHidden = false
+//        stop.isHidden = true
+//        //stop a music
+//        label.text = "Tap to Record your Voice"
+//        record.isHidden = false
     }
     
     @IBAction func onTapStopButton(_ sender: Any) {
