@@ -37,7 +37,7 @@ class SoundAnalyze : NSObject {
     func getTempo(data: AudioObject, pcmBuffer: AVAudioPCMBuffer) -> Int
     {
         let samplingRate = data.audioFormat.mSampleRate
-        let nChannel = 3
+        let nChannel = Int(data.audioFormat.mChannelsPerFrame)
         let nframe = data.data?.count
         
         guard let floatChannelData = pcmBuffer.floatChannelData else {
